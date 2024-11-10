@@ -28,8 +28,9 @@ const insertTestUser = async (email, password) => {
 };
 
 
+
 const getToken = (email) => {
-    return sign({ user: email }, process.env.JWT_SECRET_KEY)
-}
+    return sign({ user: email }, process.env.JWT_SECRET_KEY);
+};
 
 export { initializeTestDb, insertTestUser, getToken }

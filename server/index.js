@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import todoRouter from './router/todoRouter.js';
 import userRouter from './router/userRouter.js';
+import {ApiError} from './helper/ApiError.js';
 
 
 const port = process.env.PORT || 3000;
@@ -13,13 +14,14 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/', todoRouter);
 app.use('/user', userRouter);
 app.use((err, req, res, next) => {
-   const statusCode = err.status || 500;
-   res.status(statusCode).json({
-       error: err.message
-   });
+    if (err instanceof ApiError) {
+        return res.status(err.statusCode).json({ error: err.message });
+    }
+
+    
+    return res.status(500).json({ error: 'Internal server error' });
 });
 
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
 });
-
